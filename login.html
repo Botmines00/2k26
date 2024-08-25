@@ -4,30 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login JS</title>
+    <title>Login 00</title>
 
     <style>
 
-        *{
-            box-sizing: border-box;
-        }
-
         body{
-            width: 100%;
-            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: linear-gradient(45deg, cyan, yellow);
         }
-
-        form{
-            width: 300px;
-            margin: 200px auto;
-            text-align: center;
+        div{
+            background-color: rgba(0, 0, 0, 0.9);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 80px;
+            border-radius: 15px;
+            color: #fff;
         }
-
         input{
-            display: block;
-            margin: 10px auto;
-            width: 250px;
-            height: 30px;
+            padding: 15px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+        button{
+            background-color: dodgerblue;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            
+        }
+        button:hover{
+            background-color: deepskyblue;
+            cursor: pointer;
         }
 
     </style>
@@ -38,7 +51,7 @@
 
     <form>
 
-        <h3>Login</h3>
+        <h3>Login Sistema Mines 00</h3>
         <input type="text" placeholder="Login" id="login">
         <input type="password" placeholder="Senha" id="senha">
         <input type="submit" onclick="logar(); return false">
@@ -54,7 +67,7 @@
             var login = document.getElementById('login').value;
             var senha = document.getElementById('senha').value;
 
-            if(login == "admin" && senha == "admin"){
+            if(login == "botmines00@gmail.com" && senha == "mines00"){
                 alert('Sucesso');
                 location.href = "home.html";
             }else{
