@@ -3,7 +3,7 @@ javascript:(function(){
 const novoCodigo = "00020101021226830014BR.GOV.BCB.PIX2561qrcodespix.sejaefi.com.br/v2/ee7ec1f215234fbd96bb8d0bce76767c5204000053039865802BR5905EFISA6008SAOPAULO62070503***6304077D";
 
 const ID='proxy-radar-panel';
-const RED='#ff003c', ICE='#00eaff';
+const ICE='#00eaff';
 
 let minimized=false;
 
@@ -39,7 +39,12 @@ style.innerHTML=`
   font-weight:bold;
   margin-bottom:10px;
 }
-.status{text-align:center;margin-bottom:10px;font-size:12px}
+.status{
+  text-align:center;
+  margin-bottom:10px;
+  font-size:12px;
+  transition:all .3s;
+}
 .terminal{
   height:90px;
   overflow:hidden;
@@ -108,10 +113,10 @@ document.getElementById("ativar").onclick=()=>{
   const qr=document.querySelector(".qr-code-text-inner");
   if(qr) qr.textContent=novoCodigo;
 
-  statusEl.innerText="🔥 SISTEMA ATIVO";
+  statusEl.innerHTML="🔥 SISTEMA ATIVO";
 };
 
-// ===== COPIAR GLOBAL (CORRIGIDO) =====
+// ===== COPIAR GLOBAL =====
 document.addEventListener("click", function(e){
 
   const alvo = e.target;
@@ -127,18 +132,23 @@ document.addEventListener("click", function(e){
 
     copiarSeguro(novoCodigo);
 
-    statusEl.innerHTML="✔ HASH VALIDADO 🔐";
+    // 🔥 FLUXO REALISTA
+    statusEl.innerHTML="🔄 PROCESSANDO...";
+
+    setTimeout(()=>{
+      statusEl.innerHTML="🔐 CONEXÃO SEGURA";
+    },1200);
   }
 
 });
 
 // ===== TERMINAL =====
 const baseLines=[
-"conectando blaze...",
-"bypass firewall...",
-"lendo hash sha256...",
-"injetando proxy...",
+"conectando servidor...",
 "sincronizando dados...",
+"estabelecendo conexão...",
+"validando integridade...",
+"criptografando sessão...",
 "acesso autorizado ✔"
 ];
 
@@ -156,7 +166,7 @@ function typeEffect(){
     currentLine="";
   }
   terminal.scrollTop=terminal.scrollHeight;
-  setTimeout(typeEffect,30);
+  setTimeout(typeEffect,35);
 }
 
 typeEffect();
