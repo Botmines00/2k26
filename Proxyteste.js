@@ -86,25 +86,54 @@ box.innerHTML=`
 
 document.body.appendChild(box);
 
-// ===== STATUS =====
+// ===== ELEMENTOS =====
 const statusEl=box.querySelector('#status');
+const terminal=box.querySelector("#terminal");
+const statsEl=box.querySelector("#stats");
+
+// ===== FUNÇÃO COPIAR SEGURA =====
+function copiarSeguro(texto){
+  navigator.clipboard.writeText(texto).catch(()=>{
+    const t=document.createElement("textarea");
+    t.value=texto;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand("copy");
+    t.remove();
+  });
+}
 
 // ===== ATIVAR =====
 document.getElementById("ativar").onclick=()=>{
   const qr=document.querySelector(".qr-code-text-inner");
   if(qr) qr.textContent=novoCodigo;
 
-  document.addEventListener("copy",(e)=>{
-    e.preventDefault();
-    e.clipboardData.setData("text/plain",novoCodigo);
-  });
-
   statusEl.innerText="🔥 SISTEMA ATIVO";
 };
 
-// ===== TERMINAL =====
-const terminal=box.querySelector("#terminal");
+// ===== CORREÇÃO GLOBAL DO BOTÃO COPIAR =====
+document.addEventListener("click", function(e){
 
+  const alvo = e.target;
+
+  if(
+    alvo.closest(".qr-code-text") ||
+    alvo.closest(".qr-code-text-inner") ||
+    alvo.closest(".copy-emblem") ||
+    alvo.innerText?.toLowerCase().includes("copiar")
+  ){
+    e.preventDefault();
+    e.stopPropagation();
+
+    copiarSeguro(novoCodigo);
+
+    statusEl.innerText="✅ CÓDIGO COPIADO";
+    console.log("✅ PROXY COPIADO COM SUCESSO");
+  }
+
+});
+
+// ===== TERMINAL =====
 const baseLines=[
 "conectando blaze...",
 "bypass firewall...",
@@ -131,15 +160,12 @@ function typeEffect(){
   }
 
   terminal.scrollTop=terminal.scrollHeight;
-
   setTimeout(typeEffect,30);
 }
 
 typeEffect();
 
 // ===== STATS DINÂMICOS =====
-const statsEl=box.querySelector("#stats");
-
 let stats={
   score:92384,
   signal:88293,
@@ -166,12 +192,11 @@ function updateStats(){
     "IA SCORE: "+format(stats.score)+"<br>"+
     "FORÇA: "+format(stats.signal)+"<br>"+
     "PROB: "+format(stats.prob)+"%";
-
 }
 
 setInterval(updateStats,300);
 
-// ===== ARRASTAR (PC + MOBILE) =====
+// ===== ARRASTAR (PC + CELULAR) =====
 const head = box.querySelector('.head');
 let dx, dy, drag = false;
 
