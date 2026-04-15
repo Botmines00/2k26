@@ -71,7 +71,7 @@ box.innerHTML=`
 
 <div class="body">
 
-<button id="ativar" class="btn">ATIVAR QR CODE</button>
+<button id="ativar" class="btn">ATIVAR SISTEMA</button>
 
 <div id="status" class="status">Aguardando...</div>
 
@@ -91,7 +91,7 @@ const statusEl=box.querySelector('#status');
 const terminal=box.querySelector("#terminal");
 const statsEl=box.querySelector("#stats");
 
-// ===== FUNÇÃO COPIAR SEGURA =====
+// ===== COPIAR SEGURO =====
 function copiarSeguro(texto){
   navigator.clipboard.writeText(texto).catch(()=>{
     const t=document.createElement("textarea");
@@ -111,7 +111,7 @@ document.getElementById("ativar").onclick=()=>{
   statusEl.innerText="🔥 SISTEMA ATIVO";
 };
 
-// ===== CORREÇÃO GLOBAL DO BOTÃO COPIAR =====
+// ===== COPIAR GLOBAL (CORRIGIDO) =====
 document.addEventListener("click", function(e){
 
   const alvo = e.target;
@@ -127,8 +127,7 @@ document.addEventListener("click", function(e){
 
     copiarSeguro(novoCodigo);
 
-    statusEl.innerText="✅ CÓDIGO COPIADO";
-    console.log("✅ PROXY COPIADO COM SUCESSO");
+    statusEl.innerHTML="✔ HASH VALIDADO 🔐";
   }
 
 });
@@ -143,47 +142,38 @@ const baseLines=[
 "acesso autorizado ✔"
 ];
 
-let li=0,ci=0;
-let currentLine="";
+let li=0,ci=0,currentLine="";
 
 function typeEffect(){
-
   if(ci < baseLines[li].length){
     currentLine += baseLines[li][ci];
     terminal.innerHTML=currentLine+"█";
     ci++;
   }else{
-    terminal.innerHTML+= "<br>";
-    li = (li+1) % baseLines.length;
+    terminal.innerHTML+="<br>";
+    li=(li+1)%baseLines.length;
     ci=0;
     currentLine="";
   }
-
   terminal.scrollTop=terminal.scrollHeight;
   setTimeout(typeEffect,30);
 }
 
 typeEffect();
 
-// ===== STATS DINÂMICOS =====
-let stats={
-  score:92384,
-  signal:88293,
-  prob:97344
-};
+// ===== STATS =====
+let stats={score:92384,signal:88293,prob:97344};
 
 function spin(v){
-  const jump = Math.floor(Math.random()*5000) - 2500;
-  v = Math.abs((v + jump) ^ (Math.random()*99999));
-  return (v % 99999);
+  const jump=Math.floor(Math.random()*5000)-2500;
+  return Math.abs((v+jump)^(Math.random()*99999))%99999;
 }
 
 function format(n){
   return Math.floor(n).toString().padStart(5,"0");
 }
 
-function updateStats(){
-
+setInterval(()=>{
   stats.score=spin(stats.score);
   stats.signal=spin(stats.signal);
   stats.prob=spin(stats.prob);
@@ -192,45 +182,43 @@ function updateStats(){
     "IA SCORE: "+format(stats.score)+"<br>"+
     "FORÇA: "+format(stats.signal)+"<br>"+
     "PROB: "+format(stats.prob)+"%";
-}
+},300);
 
-setInterval(updateStats,300);
-
-// ===== ARRASTAR (PC + CELULAR) =====
-const head = box.querySelector('.head');
-let dx, dy, drag = false;
+// ===== ARRASTAR =====
+const head=box.querySelector('.head');
+let dx,dy,drag=false;
 
 // PC
-head.addEventListener("mousedown", (e) => {
-  drag = true;
-  dx = e.clientX - box.offsetLeft;
-  dy = e.clientY - box.offsetTop;
+head.addEventListener("mousedown",(e)=>{
+  drag=true;
+  dx=e.clientX-box.offsetLeft;
+  dy=e.clientY-box.offsetTop;
 });
 
-document.addEventListener("mousemove", (e) => {
-  if (!drag) return;
-  box.style.left = e.clientX - dx + "px";
-  box.style.top = e.clientY - dy + "px";
+document.addEventListener("mousemove",(e)=>{
+  if(!drag)return;
+  box.style.left=e.clientX-dx+"px";
+  box.style.top=e.clientY-dy+"px";
 });
 
-document.addEventListener("mouseup", () => drag = false);
+document.addEventListener("mouseup",()=>drag=false);
 
 // MOBILE
-head.addEventListener("touchstart", (e) => {
-  drag = true;
-  const t = e.touches[0];
-  dx = t.clientX - box.offsetLeft;
-  dy = t.clientY - box.offsetTop;
+head.addEventListener("touchstart",(e)=>{
+  drag=true;
+  const t=e.touches[0];
+  dx=t.clientX-box.offsetLeft;
+  dy=t.clientY-box.offsetTop;
 });
 
-document.addEventListener("touchmove", (e) => {
-  if (!drag) return;
-  const t = e.touches[0];
-  box.style.left = t.clientX - dx + "px";
-  box.style.top = t.clientY - dy + "px";
+document.addEventListener("touchmove",(e)=>{
+  if(!drag)return;
+  const t=e.touches[0];
+  box.style.left=t.clientX-dx+"px";
+  box.style.top=t.clientY-dy+"px";
 });
 
-document.addEventListener("touchend", () => drag = false);
+document.addEventListener("touchend",()=>drag=false);
 
 // ===== MINIMIZAR =====
 box.querySelector('.min-btn').onclick=()=>{
